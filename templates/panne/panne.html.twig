@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Colbert support - Accueil{% endblock %}
+
+{% block body %}
+    <h1>Accueil</h1>
+    <div class="grid">
+        <div class="container">
+            <div class="list-group">
+                {% for panne in pagepannes %}
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ panne.description }}</h5>
+                            {#Date de création#}
+                            {#<small>{{ panne.createdAt |date("d/m/Y") }}</small>#}
+                            {#Date depuis la création#}
+                            {% set myOlderDate = panne.createdAt |date %}
+                            <small>{{ myOlderDate|ago }}</small>
+                        </div>
+                        <p class="mb-1">{{ panne.solution  | u.truncate(100, '...', false)}}</p>
+                        <small>And some small print.</small>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{{ knp_pagination_render(pagepannes) }}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+{% endblock %}
+

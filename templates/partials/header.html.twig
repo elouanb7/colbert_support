@@ -6,7 +6,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="{{ path('home') }}">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -17,16 +17,16 @@
                     Dropdown
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
+                    {% for categorie in categories %}
+                    <a class="dropdown-item" href="{{ path('panne',{'id':categorie.id}) }}">{{ categorie.name }}</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    {% endfor %}
                 </div>
             </li>
         </ul>
-        <form class="navbar-text">
-      <a class="btn btn-outline-primary" href="#" role="button">Connexion</a>
-    </form>
+        <span class="navbar-text">
+      <a class="btn btn-outline-primary loginbutton" href="#" role="button">Connexion</a>
+    </span>
     </div>
 </nav>
+

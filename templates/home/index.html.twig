@@ -7,16 +7,15 @@
     <div class="grid">
         <div class="container">
             <div class="row col-md-12 g-4">
-                {% for categories in categories %}
+                {% for categorie in  categories %}
                 <div class="col-md-6">
                     <div class="card mb-3">
-                        <img src="http://www.placehold.it/300x100" class="card-img-top" alt="...">
+                        <img src="{{ asset ('img/img'~loop.index~'.jpg') }}" class="card-img-top" alt="...">
                         <div class="card-body">
-                            <h5 class="card-title">{{ categories.name }}</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.</p>
+                            <h5 class="card-title">{{ categorie.name }}</h5>
+                            <p class="card-text">{{ categorie.description }}</p>
                         </div>
-                        <div class="card-footer"><a class="btn btn-primary" href="#" role="button">Link</a></div>
+                        <div class="card-footer "><a class="btn btn-primary" href="{{ path('panne',{'id':categorie.id}) }}" role="button">Link</a></div>
                     </div>
                 </div>
                 {% endfor %}
