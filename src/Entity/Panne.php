@@ -34,7 +34,7 @@ class Panne
 
     /**
      * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="pannes")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $categorie;
 

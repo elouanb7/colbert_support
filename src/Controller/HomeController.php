@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Panne;
+use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +27,10 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $categories = $this->categorieRepo->findAll();
-        dd($categories);
+        return $this->render('home/index.html.twig', [
+            'categories' => $categories
 
-        return $this->render('home/index.html.twig', []);
+        ]);
     }
 }
 
