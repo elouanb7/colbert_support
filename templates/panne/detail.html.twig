@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Colbert Support - {{ panne.description }}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-3">
+    <h1>{{ panne.description }}</h1>
+    <div class="row">
+        <div class="col-6"><small>Solutionnée par <a href="{{ path('profil',{'id':panne.user.id}) }}">{{ panne.user.firstName }} {{ panne.user.lastName }}</a>, le {{ panne.createdAt | date ('d/m/Y') }}</small></div>
+        <div class="col-6 text-right"><a href="" class="btn btn-sm btn-warning ">
+                <i class="fas fa-edit"></i>
+            </a></div>
+    </div>
+    <br>
+    <p>{{ panne.solution }}</p>
+</div>
+{% endblock %}
+
+
+

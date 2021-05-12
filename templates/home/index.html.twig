@@ -3,12 +3,11 @@
 {% block title %}Colbert support - Accueil{% endblock %}
 
 {% block body %}
-    <h1>Accueil</h1>
     <div class="grid">
-        <div class="container">
+        <div class="container mt-5">
             <div class="row col-md-12 g-4">
                 {% for categorie in  categories %}
-                <div class="col-md-6">
+                <div class="col-md-6 card-deck">
                     <div class="card mb-3">
                         <img src="{{ asset ('img/img'~loop.index~'.jpg') }}" class="card-img-top" alt="...">
                         <div class="card-body">
