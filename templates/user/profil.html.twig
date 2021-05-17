@@ -9,12 +9,7 @@
         <h1>{{ user.firstName }} {{ user.lastName }}</h1>
         <div class="row">
             <h5>Rôles :
-                <span class=" badge-{{ user.roles[0] == "ROLE_USER" ?
-                                                                "primary" :
-                                                        "ROLE_CONTRIBUTOR" ?
-                                                                "success" :
-                                                        "ROLE_ADMIN" ?
-                                                                "warning" : "danger" }}
+                <span class=" badge-{{ user.roles[0] == "ROLE_USER" ? "primary" : "ROLE_ADMIN" ? "danger" : "success" }}
                     badge badge-pill">
                     {{ user.roles[0] == "ROLE_USER" ? "USER" : "ADMIN" }}
                 </span>

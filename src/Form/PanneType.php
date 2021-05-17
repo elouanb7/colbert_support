@@ -24,13 +24,13 @@ class PanneType extends AbstractType
             ->add('solution', TextareaType::class,[
                 'label'=> "Solution de la panne",
             ])
-            /*->add('idCategory', EntityType::class,[
+            ->add('categorie', EntityType::class,[
                 'label'=> "Catégorie",
                 'class'=> Categorie::class,
-                'choice_label'=> function ($category){
-                    return $category->();
+                'choice_label'=> function ($categorie){
+                    return $categorie->getName();
                 }
-            ])*/
+            ])
                     ;
     }
 

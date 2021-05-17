@@ -38,4 +38,15 @@ class UserController extends AbstractController
             'user' => $user,
         ]);
     }
+
+
+    /**
+     * @Route("/dashboard", name="dashboard")
+     * @return Response
+     */
+    public function dashboard(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN',null,"User tried to access a page without having ROLE_ADMIN");
+        return $this->render('user/dashboard.html.twig');
+    }
 }

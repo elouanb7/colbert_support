@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Panne;
+use App\Entity\User;
 use App\Form\PanneType;
 use App\Repository\CategorieRepository;
 use App\Repository\PanneRepository;
@@ -72,6 +73,50 @@ class PanneController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/panne/ajout", name="add_panne")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+
+    public function addPanne(Request $request, EntityManagerInterface $manager)
+    {
+        $panne = new Panne();
+
+        $form = $this->createForm(PanneType::class, $panne);
+
+        $form->handleRequest($request);
+        //Je vérifie le formulaire
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            //Je récupère mes données du formulaire
+            $panne = $form->getData();
+
+            //Je récupère la date d'édition
+            $editDate = new \DateTime('now');
+            //Je met à jour la date
+            $panne->setCreatedAt($editDate);
+            $panne->setUser($this->getUser());
+            //Je persiste mes données
+            $manager->persist($panne);
+            //J'enregistre mes données
+            $manager->flush();
+
+            //Message de succès
+            $this->addflash(
+                'success',
+                "La modification est enregistrée !"
+            );
+
+            return $this->redirectToRoute('detail', [
+                'id' => $panne->getId()
+            ]);
+        }
+        return $this->render('panne/panne_add.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 
     /**
      * @Route("/panne/detail/{id}/edit", name="edit_panne")
@@ -145,7 +190,7 @@ class PanneController extends AbstractController
             'error',
             "Vous n'avez pas les permissions nécéssaires !"
         );
-        return $this->render('panne',[
+        return $this->render('panne', [
             'panne' => $panne
         ]);
     }
