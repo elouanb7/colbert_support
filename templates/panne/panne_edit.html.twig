@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Colbert support - Edition de {{ panne.description }}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+          crossorigin="anonymous"/>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
+
+
+{% block body %}
+    <header>
+        <button class="btn btn-secondary" onclick="window.history.back();">Retour</button>
+        <div class="container d-flex h-100 align-items-center">
+            <div class="mx-auto text-center">
+                <h1 class="mx-auto my-0 text-uppercase">Modifier
+                    <br>
+                    <span class="h3">{{ panne.description }}</span></h1>
+                <div class="text-white-50 mx-auto "></div>
+                {#<div class="container-fluid mt-3 ">
+                    <a href="#form-add-tricks" class="js-scroll-trigger">
+                        <i class="fas fa-arrow-down fa-3x"></i>
+                    </a>
+                </div>#}
+            </div>
+        </div>
+    </header>
+
+    <body>
+    <div id="form-add-tricks">
+        <div id="bg-comments-tricks">
+            <div class="row">
+                <div class="mx-auto col-md-8">
+                    <h2 class="mt-5 mb-3">
+                        Complétez le formulaire</h2>
+                    <div class="form-group">
+                        {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <button type="submit" class="btn btn-success">Valider</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </body>
+{% endblock body %}
+
+</html>
