@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="-1" role="dialog" id="alert">
+<div class="modal fade" tabindex="-1" role="dialog" id="alert{{ panne.id }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-danger">
@@ -12,7 +12,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-info" data-dismiss="modal">Annuler</button>
-                <a href="{{ path('del_panne',{'id':panne.id}) }}" class="btn btn-danger">Supprimer</a>
+                <a href="{{ path('del_panne',{'id': panne.id }) }}" class="btn btn-danger">Supprimer</a>
             </div>
         </div>
     </div>

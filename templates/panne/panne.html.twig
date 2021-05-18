@@ -4,13 +4,11 @@
 {% block title %}Colbert support - {{ catPannes.name }}{% endblock %}
 
 {% block body %}
-
     <div class="container">
         <h1 class="text-center mt-3 mb-3">Liste des Pannes de {{ pannes[0].categorie.name }} <span
                     class="badge badge-secondary">{{ pagination.getTotalItemCount }}</span></h1>
         <div class="list-group">
             {% for panne in pagination %}
-                {% include ('partials/modal.html.twig') %}
                 <div class="list-group-item list-group-item-action">
                     <div class="row">
                         <div class="col-md-9 ">
@@ -30,18 +28,28 @@
                                 <small class="">{{ myOlderDate|ago }}</small>
                             </div>
                             <div class="col-md-12 mt-2 mb-2 text-right">
+                            {% for role in app.user.roles %}
+                            {% if role == "ROLE_ADMIN" %}
+
                                 <a href="{{ path('edit_panne',{'id': panne.id}) }}" class="btn btn-sm btn-warning ">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a data-toggle="modal" data-target="#alert" class="btn btn-sm btn-danger ">
+                                <a data-toggle="modal" data-target="#alert{{ panne.id }}"
+                                   class="btn btn-sm btn-danger "
+                                   href="">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
+                                {% endif %}
+                                {% endfor %}
+
+
                             </div>
                         </div>
                     </div>
                 </div>
-
+                {% include 'partials/modal.html.twig' %}
             {% endfor %}
+
 
         </div>
     </div>

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PanneRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PanneRepository::class)
@@ -19,11 +20,15 @@ class Panne
 
     /**
      * @ORM\Column(type="string", length=1000)
+     * @Assert\NotBlank(message="Ce champ est obligatoire !")
+     * @Assert\Length(min="3", minMessage="Ce champ doit contenir au moins 3 caractères")
      */
     private $description;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     * @Assert\Length(min="3", minMessage="Ce champ doit contenir au moins 3 caractères")
      */
     private $solution;
 

@@ -18,20 +18,23 @@ class PanneType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description', TextType::class,[
-                'label'=> "Description de la panne"
+            ->add('description', TextType::class, [
+                'label' => "Description de la panne",
+                'empty_data' => '',
+                'required' => false,
             ])
-            ->add('solution', TextareaType::class,[
-                'label'=> "Solution de la panne",
+            ->add('solution', TextareaType::class, [
+                'label' => "Solution de la panne",
+                'empty_data' => '',
+                'required' => false,
             ])
-            ->add('categorie', EntityType::class,[
-                'label'=> "Catégorie",
-                'class'=> Categorie::class,
-                'choice_label'=> function ($categorie){
+            ->add('categorie', EntityType::class, [
+                'label' => "Catégorie",
+                'class' => Categorie::class,
+                'choice_label' => function ($categorie) {
                     return $categorie->getName();
                 }
-            ])
-                    ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

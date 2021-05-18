@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Extra\String\StringExtension;
@@ -77,11 +78,12 @@ class PanneController extends AbstractController
      * @Route("/panne/ajout", name="add_panne")
      * @param Request $request
      * @param EntityManagerInterface $manager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
 
     public function addPanne(Request $request, EntityManagerInterface $manager)
     {
+        $categories = $this->categorieRepo->findAll();
         $panne = new Panne();
 
         $form = $this->createForm(PanneType::class, $panne);
@@ -106,7 +108,7 @@ class PanneController extends AbstractController
             //Message de succès
             $this->addflash(
                 'success',
-                "La modification est enregistrée !"
+                "La panne à bien été créée !"
             );
 
             return $this->redirectToRoute('detail', [
@@ -114,7 +116,8 @@ class PanneController extends AbstractController
             ]);
         }
         return $this->render('panne/panne_add.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'categories' => $categories,
         ]);
     }
 
@@ -127,7 +130,7 @@ class PanneController extends AbstractController
      */
     public function editPanne(Panne $panne, Request $request, EntityManagerInterface $manager): Response
     {
-
+        $categories = $this->categorieRepo->findAll();
         //Je crée le formulaire
         $form = $this->createForm(PanneType::class, $panne);
         //Je lance la requête
@@ -160,20 +163,26 @@ class PanneController extends AbstractController
         }
         return $this->render('panne/panne_edit.html.twig', [
             'form' => $form->createView(),
-            'panne' => $panne
+            'panne' => $panne,
+            'categories' => $categories,
         ]);
     }
 
     /**
      * @Route("/panne/detail/{id}/delete", name="del_panne")
+     *
      * @param Panne $panne
      * @param EntityManagerInterface $manager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
 
     public function delPanne(Panne $panne, EntityManagerInterface $manager)
     {
+        $categories = $this->categorieRepo->findAll();
+        $catPannes = $panne->getCategorie()->getId();
+        $id = $catPannes;
         if ($this->isGranted('ROLE_ADMIN')) {
+
             //
             $manager->remove($panne);
             //
@@ -184,14 +193,17 @@ class PanneController extends AbstractController
                 "La panne à bien été supprimée !"
             );
             //J'affiche la vue
-            return $this->redirectToRoute('panne');
+            return $this->redirectToRoute('panne', [
+               'id' => $id
+            ]);
         }
         $this->addFlash(
-            'error',
+            'danger',
             "Vous n'avez pas les permissions nécéssaires !"
         );
-        return $this->render('panne', [
-            'panne' => $panne
+        return $this->redirectToRoute('panne', [
+            'panne' => $panne,
+            'id' => $id,
         ]);
     }
 

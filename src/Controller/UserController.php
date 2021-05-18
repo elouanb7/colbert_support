@@ -46,7 +46,6 @@ class UserController extends AbstractController
      */
     public function dashboard(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN',null,"User tried to access a page without having ROLE_ADMIN");
         return $this->render('user/dashboard.html.twig');
     }
 }
