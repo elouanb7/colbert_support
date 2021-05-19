@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Colbert support - Users{% endblock %}
+
+{% block body %}
+    <div class="container mt-3">
+        <div class="row mb-3 ml-auto">
+            <div class="col-8 bg-info ">
+                TRI
+            </div>
+            <div class="col-4">
+                <a class="btn btn-primary" href="#">
+                    &plus; Ajouter un utilisateur
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            {% for user in users %}
+                <div class="col-4">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="card-title my-auto">{{ user.firstName }} {{ user.lastName }}</h5>
+                                </div>
+                                <div class="col-md-4 my-auto text-right">
+                                    <a href="#" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="card-text">
+                                <div class="row">
+                                    <div class="col-6">
+                                        {% set roleColor = "" %}
+                                        {% set role = "" %}
+                                        {% if user.roles[0] == "ROLE_USER" %}
+                                            {% set roleColor = "primary" %}
+                                            {% set role = "USER" %}
+                                        {% elseif user.roles[0] == "ROLE_CONTRIBUTOR" %}
+                                            {% set roleColor = "success" %}
+                                            {% set role = "CONTRIBUTOR" %}
+                                        {% elseif user.roles[0] == "ROLE_ADMIN" %}
+                                            {% set roleColor = "warning" %}
+                                            {% set role = "ADMIN" %}
+                                        {% elseif user.roles[0] == "ROLE_SUPER_ADMIN" %}
+                                            {% set roleColor = "danger" %}
+                                            {% set role = "SUPER ADMIN" %}
+                                        {% endif %}
+                                        <span class=" badge-{{ roleColor }} badge badge-pill">{{ role }}</span>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        id : {{ user.id }}
+                                    </div>
+                                    <div class="col-12">
+                                        {{ user.email }}
+                                    </div>
+
+                                    <div class="col-12">
+                                        <p>
+                                            Enregistré le : {{ user.createdAt | date('d/m/Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
