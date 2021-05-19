@@ -19,7 +19,7 @@ class Panne
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=1000)
+     * @ORM\Column(type="text")
      * @Assert\NotBlank(message="Ce champ est obligatoire !")
      * @Assert\Length(min="3", minMessage="Ce champ doit contenir au moins 3 caractères")
      */
@@ -48,6 +48,16 @@ class Panne
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isTicket;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $intitule;
 
     public function getId(): ?int
     {
@@ -110,6 +120,30 @@ class Panne
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsTicket(): ?bool
+    {
+        return $this->isTicket;
+    }
+
+    public function setIsTicket(?bool $isTicket): self
+    {
+        $this->isTicket = $isTicket;
+
+        return $this;
+    }
+
+    public function getIntitule(): ?string
+    {
+        return $this->intitule;
+    }
+
+    public function setIntitule(?string $intitule): self
+    {
+        $this->intitule = $intitule;
 
         return $this;
     }

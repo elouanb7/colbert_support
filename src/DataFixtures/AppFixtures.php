@@ -35,6 +35,7 @@ class AppFixtures extends Fixture
     {
         $faker = Faker\Factory::create('fr_FR');
 
+        $roles = [["ROLE_ADMIN"], ["ROLE_USER"], ["ROLE_CONTRIBUTOR"], ["ROLE_SUPER_ADMIN"]];
         // 1 - Récupérer toutes les pannes
 
 
@@ -45,9 +46,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 4; $i++) {
             $categorie = new Categorie();
             $categorie->setName('Categorie n°' . $i)
-                      ->setDescription($faker->sentence())
-            ;
-
+                      ->setDescription($faker->sentence());
             $manager->persist($categorie);
         }
         $manager->flush();
@@ -60,8 +59,9 @@ class AppFixtures extends Fixture
             $user->setFirstName($faker->firstName())
                 ->setLastName($faker->lastName())
                 ->setEmail($faker->email())
-                ->setRoles(['ROLE_USER'])
-                ->setPassword($this->encoder->encodePassword($user, 'password'));
+                ->setRoles($roles[mt_rand(0, 3)])
+                ->setPassword($this->encoder->encodePassword($user, 'password'))
+                ->setCreatedAt($faker->dateTimeBetween('-2 years', 'now'));
             // Je stock en mémoire
             $manager->persist($user);
 
@@ -70,9 +70,11 @@ class AppFixtures extends Fixture
 
                 $panne = new Panne();
                 $panne->setCreatedAt(new \DateTime('now'))
-                    ->setDescription($faker->sentence())
-                    ->setSolution($faker->paragraph(10))
-                    ->setUser($user);
+                    ->setIntitule($faker->sentence())
+                    ->setDescription($faker->paragraph(10))
+                    ->setSolution($faker->paragraph(25))
+                    ->setUser($user)
+                    ->setIsTicket(false);
                 $manager->persist($panne);
             }
             $manager->flush();

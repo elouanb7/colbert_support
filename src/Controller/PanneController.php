@@ -41,7 +41,7 @@ class PanneController extends AbstractController
     /**
      * Permet d'afficher la liste des pannes
      *
-     * @Route("/panne/categorie/{id}", name="panne")
+     * @Route("/pannes/categorie/{id}", name="pannes")
      *
      * @param $id
      * @param PaginatorInterface $paginator
@@ -65,7 +65,7 @@ class PanneController extends AbstractController
             'style' => 'bottom',
             'span_class' => 'whatever',
         ]);
-        return $this->render('panne/panne.html.twig', [
+        return $this->render('panne/pannes.html.twig', [
             'controller_name' => 'PanneController',
             'catPannes' => $catPannes,
             'categories' => $categories,
@@ -75,7 +75,7 @@ class PanneController extends AbstractController
     }
 
     /**
-     * @Route("/panne/ajout", name="add_panne")
+     * @Route("/pannes/ajout", name="add_panne")
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @return RedirectResponse|Response
@@ -122,7 +122,7 @@ class PanneController extends AbstractController
     }
 
     /**
-     * @Route("/panne/detail/{id}/edit", name="edit_panne")
+     * @Route("/pannes/detail/{id}/edit", name="edit_panne")
      * @param Panne $panne
      * @param Request $request
      * @param EntityManagerInterface $manager
@@ -169,7 +169,7 @@ class PanneController extends AbstractController
     }
 
     /**
-     * @Route("/panne/detail/{id}/delete", name="del_panne")
+     * @Route("/pannes/detail/{id}/delete", name="del_panne")
      *
      * @param Panne $panne
      * @param EntityManagerInterface $manager
@@ -193,7 +193,7 @@ class PanneController extends AbstractController
                 "La panne à bien été supprimée !"
             );
             //J'affiche la vue
-            return $this->redirectToRoute('panne', [
+            return $this->redirectToRoute('pannes', [
                'id' => $id
             ]);
         }
@@ -201,14 +201,14 @@ class PanneController extends AbstractController
             'danger',
             "Vous n'avez pas les permissions nécéssaires !"
         );
-        return $this->redirectToRoute('panne', [
+        return $this->redirectToRoute('pannes', [
             'panne' => $panne,
             'id' => $id,
         ]);
     }
 
     /**
-     * @Route("/panne/detail/{id}", name="detail")
+     * @Route("/pannes/detail/{id}", name="detail")
      * @param $id
      * @return Response
      */
@@ -219,6 +219,39 @@ class PanneController extends AbstractController
         return $this->render('panne/detail.html.twig', [
             'panne' => $panne,
             'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * Permet d'afficher la liste des pannes
+     *
+     * @Route("/tickets/categorie", name="tickets")
+     *
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
+    public function ticket(PaginatorInterface $paginator, Request $request): Response
+    {
+        $categories = $this->categorieRepo->findAll();
+        /*$pannes = $this->panneRepo->findBy(['categorie' => $id]);*/
+        /*$pagination = $paginator->paginate(
+            $pannes,
+            $request->query->getInt('page', 1),
+            6
+        );*/
+
+       /* $pagination->setTemplate('ressources/twitter_bootstrap_v4_pagination.html.twig');
+        $pagination->setCustomParameters([
+            'align' => 'center', # center|right (for template: twitter_bootstrap_v4_pagination and foundation_v6_pagination)
+            'style' => 'bottom',
+            'span_class' => 'whatever',
+        ]);*/
+        return $this->render('panne/tickets.html.twig', [
+            'controller_name' => 'PanneController',
+            'categories' => $categories,
+            /*'pannes' => $pannes,
+            'pagination' => $pagination*/
         ]);
     }
 

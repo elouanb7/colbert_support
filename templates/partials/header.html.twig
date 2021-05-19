@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="{{ path('home') }}">Colbert Support</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -11,21 +12,43 @@
             </li>
 
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
                     Catégories
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for categorie in categories %}
-                    <a class="dropdown-item" href="{{ path('panne',{'id':categorie.id}) }}">{{ categorie.name }}</a>
+                        <a class="dropdown-item" href="{{ path('pannes',{'id':categorie.id}) }}">{{ categorie.name }}</a>
                     {% endfor %}
                 </div>
             </li>
+            {% for role in app.user.roles %}
+                {% if role == "ROLE_ADMIN" or role == "ROLE_SUPER_ADMIN" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('add_panne') }}">Ajouter une panne</a>
+                    </li>
+                {% elseif role == "ROLE_CONTRIBUTOR" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('add_panne') }}">Ajouter une panne</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('add_panne') }}">Envoyer un ticket</a>
+                    </li>
+
+                {% endif %}
+            {% endfor %}
+            {% if app.user.roles[0] == "ROLE_USER" %}
             <li class="nav-item">
-                <a class="nav-link" href="{{path('add_panne')}}">Ajouter une panne</a>
+                <a class="nav-link" href="{{ path('add_panne') }}">Envoyer un ticket</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('dashboard') }}">Dashboard</a>
             </li>
         </ul>
         <span class="navbar-text">
-      <a class="btn btn-outline-primary loginbutton" data-toggle="modal" data-target="#logout" role="button">Déconnexion</a>
+      <a class="btn btn-outline-primary loginbutton" data-toggle="modal" data-target="#logout"
+         role="button">Déconnexion</a>
     </span>
     </div>
 </nav>

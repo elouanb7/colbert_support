@@ -39,6 +39,21 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/profil/dashboard/users", name="users")
+     * @return Response
+     */
+    public function users(): Response
+    {
+        $categories = $this->categorieRepo->findAll();
+        $users = $this->userRepo->findAll();
+        return $this->render('user/users.html.twig', [
+            'controller_name' => 'UserController',
+            'categories' => $categories,
+            'users' => $users,
+        ]);
+    }
+
 
     /**
      * @Route("/dashboard", name="dashboard")
@@ -46,6 +61,17 @@ class UserController extends AbstractController
      */
     public function dashboard(): Response
     {
-        return $this->render('user/dashboard.html.twig');
+        $users = $this->userRepo->findAll();
+        $nbUsers = count($users);
+        $categories = $this->categorieRepo->findAll();
+        return $this->render('user/dashboard.html.twig',[
+            'users' => $users,
+            'lastUser' => $this->userRepo->findBy([],['createdAt' => "DESC"], 1),
+            'lastAdmin' => $this->userRepo->findLastByRole('ROLE_ADMIN'),
+            'lastContributor' => $this->userRepo->findLastByRole('ROLE_CONTRIBUTOR'),
+            'categories' => $categories,
+            'nbUsers' => $nbUsers,
+            'tickets' => $this->panneRepo->findBy(['isTicket' => true])
+        ]);
     }
 }

@@ -13,9 +13,9 @@
                     <div class="row">
                         <div class="col-md-9 ">
 
-                            <a href="{{ path('detail',{'id':panne.id}) }}"><h5 class="mb-1">{{ panne.description }}</h5>
+                            <a href="{{ path('detail',{'id':panne.id}) }}"><h5 class="mb-1">{{ panne.intitule }}</h5>
                             </a>
-                            <p class="mb-1">{{ panne.solution  | u.truncate(100, '...', false) }}</p>
+                            <p class="mb-1">{{ panne.description  | u.truncate(100, '...', false) }}</p>
                             <small>Solutionné par <a
                                         href="{{ path('profil',{'id':panne.user.id}) }}">{{ panne.user.firstName }} {{ panne.user.lastName }}</a>
                             </small>
@@ -29,7 +29,7 @@
                             </div>
                             <div class="col-md-12 mt-2 mb-2 text-right">
                             {% for role in app.user.roles %}
-                            {% if role == "ROLE_ADMIN" %}
+                            {% if role == "ROLE_ADMIN" or role == "ROLE_SUPER_ADMIN" %}
 
                                 <a href="{{ path('edit_panne',{'id': panne.id}) }}" class="btn btn-sm btn-warning ">
                                     <i class="fas fa-edit"></i>
@@ -39,6 +39,10 @@
                                    href="">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
+                                {% elseif role == "ROLE_CONTRIBUTOR" and panne.user == app.user %}
+                                    <a href="{{ path('edit_panne',{'id': panne.id}) }}" class="btn btn-sm btn-warning ">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                 {% endif %}
                                 {% endfor %}
 

@@ -1,23 +1,211 @@
-<!doctype html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}Colbert support - Admin Dashboard{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-          integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-          crossorigin="anonymous"/>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-{% block body %}
-<body>
-<div class="container">
-    <div class="text-center"><h1>Bienvenue sur le dashboard des admins</h1></div>
-</div>
+{% extends 'base.html.twig' %}
 
-</body>
-{% endblock body %}
+{% block title %}Colbert Support - Dashboard{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-primary mb-3">
+                    <div class="row">
+                        <div class="col-md-4 my-auto ">
+                            <div class="text-center">
+                                <h1>
+                                    <i class="fas fa-users text-white"></i>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span6 border-right"></div>
+                            <div class="span6"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Utilisateurs : {{ nbUsers }}</h5>
+                                <p class="card-text"><small class="text-white">Dernier ajouté
+                                        : <a class="text-white"
+                                             href="{{ path('profil',{'id':lastUser[0].id}) }}">{{ lastUser[0].firstName }} {{ lastUser[0].lastName }}</a>
+                                        le
+                                        : {{ lastUser[0].createdAt | date ('d/m/Y') }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card bg-success mb-3">
+                    <div class="row">
+                        <div class="col-md-4 my-auto ">
+                            <div class="text-center">
+                                <h1>
+                                    <i class="fas fa-hands-helping text-white"></i>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span6 border-right"></div>
+                            <div class="span6"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Contributors :
+                                    {% set nbContributors = 0 %}
+                                    {% for contributor in users %}
+                                        {% for role in contributor.roles %}
+                                            {% if role == "ROLE_CONTRIBUTOR" %}
+                                                {% set nbContributors = nbContributors +1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {{ nbContributors }}</h5>
+                                <p class="card-text"><small class="text-white">Dernier ajouté
+                                        : <a class="text-white"
+                                             href="{{ path('profil',{'id':lastContributor[0].id}) }}">{{ lastContributor[0].firstName }} {{ lastContributor[0].lastName }}</a>
+                                        le :
+                                        {{ lastContributor[0].createdAt | date ('d/m/Y') }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-warning mb-3">
+                    <div class="row">
+                        <div class="col-md-4 my-auto ">
+                            <div class="text-center">
+                                <h1>
+                                    <i class="fas fa-user-shield text-white"></i>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span6 border-right"></div>
+                            <div class="span6"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Administrateurs : {% set nbAdmins = 0 %}
+                                    {% for admin in users %}
+                                        {% for role in admin.roles %}
+                                            {% if role == "ROLE_ADMIN" %}
+                                                {% set nbAdmins = nbAdmins +1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {{ nbAdmins }}</h5>
+                                <p class="card-text"><small class="text-white">Dernier ajouté
+                                        : <a class="text-white"
+                                             href="{{ path('profil',{'id':lastAdmin[0].id}) }}">{{ lastAdmin[0].firstName }} {{ lastAdmin[0].lastName }}</a>
+                                        le :
+                                        {{ lastAdmin[0].createdAt | date ('d/m/Y') }}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card bg-danger mb-3">
+                    <div class="row">
+                        <div class="col-md-4 my-auto ">
+                            <div class="text-center">
+                                <h1>
+                                    <i class="fas fa-mask text-white"></i>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span6 border-right"></div>
+                            <div class="span6"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Super-Administrateurs : {% set nbSuperAdmins = 0 %}
+                                    {% for superAdmin in users %}
+                                        {% for role in superAdmin.roles %}
+                                            {% if role == "ROLE_SUPER_ADMIN" %}
+                                                {% set nbSuperAdmins = nbSuperAdmins +1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {{ nbSuperAdmins }}</h5>
+                                <p class="card-text"><small class="text-white">
+                                        {% set nbSuperAdmins = 0 %}
+                                        {% for superAdmin in users %}
+                                            {% for role in superAdmin.roles %}
+                                                {% if role == "ROLE_SUPER_ADMIN" %}
+                                                    {% set nbSuperAdmins = nbSuperAdmins +1 %}
+                                                    {% if nbSuperAdmins > 1 %}
+                                                        ,
+                                                    {% endif %}
+                                                    <a class="text-white"
+                                                       href="{{ path('profil',{'id':superAdmin.id}) }}">{{ superAdmin.firstName }} {{ superAdmin.lastName }}</a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tickets</h5>
+                        <hr>
+                        <div class="card-text">
+                            <div class="list-group {{ tickets|length>2 ? "dashboard" : "" }}">
+                                {% for ticket in tickets %}
+
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <div class="col-md-9 ">
+
+                                                <a href="{{ path('detail',{'id':ticket.id}) }}"><h5
+                                                            class="mb-1">{{ ticket.intitule }}</h5>
+                                                </a>
+                                                <p class="mb-1">{{ ticket.description  | u.truncate(50, '...', false) }}</p>
+                                                <small>Posté par <a
+                                                            href="{{ path('profil',{'id':ticket.user.id}) }}">{{ ticket.user.firstName }} {{ ticket.user.lastName }}</a>
+                                                </small>
+
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="col-md-12 text-right">
+                                                    {% set myOlderDate = ticket.createdAt | date %}
+                                                    <small class="">{{ myOlderDate|ago }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <a class="btn btn-dark pl-5 pr-5 pt-3 pb-3 mb-4 d-block" href="{{ path('users') }}">
+                    Liste des utilisateurs
+                </a>
+                <a class="btn btn-dark pl-5 pr-5 pt-3 pb-3 mb-4 d-block" href="{{ path('tickets') }}">
+                    Liste des tickets
+                </a>
+                <a class="btn btn-dark pl-5 pr-5 pt-3 pb-3 mb-4 d-block" href="{{ path('users') }}">
+                    Liste des tickets
+                </a>
+                <a class="btn btn-dark pl-5 pr-5 pt-3 pb-3 mb-4 d-block" href="{{ path('users') }}">
+                    Liste des tickets
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

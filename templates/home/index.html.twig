@@ -14,7 +14,7 @@
                             <h5 class="card-title">{{ categorie.name }}</h5>
                             <p class="card-text">{{ categorie.description }}</p>
                         </div>
-                        <div class="card-footer "><a class="btn btn-primary" href="{{ path('panne',{'id':categorie.id}) }}" role="button">Link</a></div>
+                        <div class="card-footer "><a class="btn btn-primary" href="{{ path('pannes',{'id':categorie.id}) }}" role="button">Link</a></div>
                     </div>
                 </div>
                 {% endfor %}

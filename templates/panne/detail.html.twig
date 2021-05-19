@@ -1,19 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Colbert Support - {{ panne.description }}
+    Colbert Support - {{ panne.intitule }}
 {% endblock %}
 
 {% block body %}
     <div class="container mt-3">
-        <h1>{{ panne.description }}</h1>
+        <h1>{{ panne.intitule }}</h1>
         <div class="row">
             <div class="col-6"><small>Solutionnée par <a
                             href="{{ path('profil',{'id':panne.user.id}) }}">{{ panne.user.firstName }} {{ panne.user.lastName }}</a>,
                     le {{ panne.createdAt | date ('d/m/Y') }}</small></div>
             <div class="col-6 text-right">
                 {% for role in app.user.roles %}
-                    {% if role == "ROLE_ADMIN" %}
+                    {% if role == "ROLE_ADMIN" or role == "ROLE_SUPER_ADMIN" %}
+                        <a href="{{ path('edit_panne',{'id':panne.id}) }}" class="btn btn-sm btn-warning ">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    {% elseif role == "ROLE_CONTRIBUTOR" and panne.user == app.user %}
                         <a href="{{ path('edit_panne',{'id':panne.id}) }}" class="btn btn-sm btn-warning ">
                             <i class="fas fa-edit"></i>
                         </a>
@@ -29,6 +33,12 @@
                 <div class="card">
                     <img src="https://www.placehold.it/300x100" alt="">
                     <div class="card-body">
+                        <div class="card-text">
+                            <p>
+                                {{ panne.description }}
+                            </p>
+                        </div>
+                        <hr>
                         <div class="card-text">
                             <p>{{ panne.solution }}</p>
                         </div>
