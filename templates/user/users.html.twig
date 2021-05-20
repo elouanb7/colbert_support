@@ -5,12 +5,48 @@
 
 {% block body %}
     <div class="container mt-3">
-        <div class="row mb-3 ml-auto">
-            <div class="col-8 bg-info ">
-                TRI
+        <div class="row mb-3">
+            <div class="col-10 my-auto">
+                <div class="row">
+                    <div class="col-2 my-auto">Trier par :</div>
+                    <div class="col-3 my-auto">
+                        <div class="select-container d-block">
+
+                            <select class="custom-select">
+                                <option selected="">ID</option>
+                                <option value="1">Ordre Alphabétique</option>
+                                <option value="2">Ordre Alphabétique Inverse</option>
+                                <option value="3">Date d'enregistrement</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2 my-auto">Afficher :</div>
+                    <div class="col-2 my-auto">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="usersCheck" checked>
+                            <label class="custom-control-label" for="usersCheck">Users</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="contributorCheck" checked>
+                            <label class="custom-control-label" for="contributorCheck">Contributors</label>
+                        </div>
+                    </div>
+                    <div class="col-3 my-auto">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="adminsCheck" checked>
+                            <label class="custom-control-label" for="adminsCheck">Admins</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="superAdminsCheck" checked>
+                            <label class="custom-control-label" for="superAdminsCheck">Super Admins</label>
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
-            <div class="col-4">
-                <a class="btn btn-primary" href="#">
+            <div class="col-2 my-auto">
+                <a class="btn btn-primary" href="{{ path('add_user') }}">
                     &plus; Ajouter un utilisateur
                 </a>
             </div>
@@ -28,8 +64,10 @@
                                     <a href="#" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="#" class="btn btn-sm btn-danger">
-                                        <i class="fas fa-trash"></i>
+                                    <a data-toggle="modal" data-target="#alert{{ user.id }}"
+                                       class="btn btn-sm btn-danger "
+                                       href="">
+                                        <i class="far fa-trash-alt"></i>
                                     </a>
                                 </div>
                             </div>
@@ -71,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-
+                {% include 'partials/modal_users.html.twig' %}
             {% endfor %}
         </div>
     </div>

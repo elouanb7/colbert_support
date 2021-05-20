@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Panne;
 use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
-use App\Service\TestService;
+use App\Service\ValidationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +15,10 @@ class HomeController extends AbstractController
 {
 
     private CategorieRepository $categorieRepo;
-    private TestService $testService;
+    private ValidationService $testService;
 
     // Constructeur
-    public function __construct(CategorieRepository $categorieRepo, TestService $testService)
+    public function __construct(CategorieRepository $categorieRepo, ValidationService $testService)
     {
         $this->categorieRepo = $categorieRepo;
         $this->testService = $testService;

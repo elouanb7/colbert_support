@@ -1,13 +1,13 @@
-{% extends ('base.html.twig') %}
-{% block title %}Colbert support - Modification de {{ panne.intitule }}{% endblock %}
+{% extends 'base.html.twig' %}
+{% block title %}Colbert support - Nouvel Utilisateur{% endblock %}
 {% block body %}
     <header>
         <button class="btn btn-secondary" onclick="window.history.back();">Retour</button>
         <div class="container d-flex h-100 align-items-center">
             <div class="mx-auto text-center">
-                <h1 class="mx-auto my-0 text-uppercase">Modifier
+                <h1 class="mx-auto my-0 text-uppercase">Nouvel Utilisateur
                     <br>
-                    <span class="h3">{{ panne.description }}</span></h1>
+                </h1>
                 <div class="text-white-50 mx-auto "></div>
                 {# <div class="container-fluid mt-3 ">
                     <a href="#form-add-tricks" class="js-scroll-trigger">
@@ -23,6 +23,13 @@
         <div class="mx-auto col-md-8">
             <h2 class="mt-5 mb-3">
                 Complétez le formulaire</h2>
+                {% if violations is defined %}
+                    {% for violation in violations %}
+            <div class="alert-danger">
+                {{ violation.message }}
+            </div>
+                    {% endfor %}
+                {% endif %}
             <div class="form-group">
                 {{ form_start(form) }}
                 {{ form_widget(form) }}
