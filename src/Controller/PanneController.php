@@ -228,7 +228,7 @@ class PanneController extends AbstractController
     /**
      * Permet d'afficher la liste des pannes
      *
-     * @Route("/tickets/categorie", name="tickets")
+     * @Route("/tickets", name="tickets")
      *
      * @param PaginatorInterface $paginator
      * @param Request $request
@@ -236,12 +236,13 @@ class PanneController extends AbstractController
      */
     public function ticket(PaginatorInterface $paginator, Request $request): Response
     {
-        $id = $request->request->getInt('categories');
+
         $categories = $this->categorieRepo->findAll();
+        $id = $request->request->getInt('categories');
         if ($id) {
-            $tickets = $this->panneRepo->findBy(['isTicket' => true, 'categorie' => $id]);
+            $tickets = $this->panneRepo->findBy(['isTicket' => true, 'categorie' => $id],['createdAt' => 'ASC']);
         } else {
-            $tickets = $this->panneRepo->findBy(['isTicket' => true]);
+            $tickets = $this->panneRepo->findBy(['isTicket' => true],['createdAt' => 'ASC']);
         }
         $pagination = $paginator->paginate(
             $tickets,
@@ -259,7 +260,8 @@ class PanneController extends AbstractController
             'controller_name' => 'PanneController',
             'categories' => $categories,
             'tickets' => $tickets,
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'id' => $id,
         ]);
     }
 

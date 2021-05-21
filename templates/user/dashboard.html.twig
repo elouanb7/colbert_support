@@ -187,6 +187,13 @@
                                         </div>
                                     </div>
                                 {% endfor %}
+                                {% if allTickets > 6 %}
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <h5><a class="ml-3" href="{{ path('tickets') }}">Voir plus >></a></h5>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

@@ -15,8 +15,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class UserType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('firstName', TextType::class, [
                 'label' => "Prenom",
@@ -41,24 +43,18 @@ class UserType extends AbstractType
                 'invalid_message' => 'Les deux champs doivent être identiques.',
             ])
             ->add('roles', ChoiceType::class, [
-                'choices' => [
-                    'Utilisateur' => 'ROLE_USER',
-                    'Contributeur' => 'ROLE_CONTRIBUTOR',
-                    'Admin' => 'ROLE_ADMIN',
-                ],
+                'choices' => $options['rolechoices'],
                 'multiple' => false,
                 'expanded' => false,
                 'label' => "Roles",
             ]);
         $builder->get('roles')
             ->addModelTransformer(new CallbackTransformer(
-                function ($rolesArray)
-                {
+                function ($rolesArray) {
                     // transform the array to a string
                     return count($rolesArray) ? $rolesArray[0] : null;
                 },
-                function ($rolesString)
-                {
+                function ($rolesString) {
                     // transform the string back to an array
                     return [$rolesString];
                 }
@@ -68,11 +64,12 @@ class UserType extends AbstractType
 
     // Data transformer
 
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'rolechoices' => [],
         ]);
+
     }
 }

@@ -8,16 +8,21 @@
         <div class="row mb-3">
             <div class="col-10 my-auto">
                 <div class="row">
-                    <div class="col-2 my-auto">Trier par :</div>
-                    <div class="col-3 my-auto">
-                        <div class="select-container d-block">
-                            <select class="custom-select">
-                                <option selected="">ID</option>
-                                <option value="1">Ordre Alphabétique</option>
-                                <option value="2">Ordre Alphabétique Inverse</option>
-                                <option value="3">Date d'enregistrement</option>
-                            </select>
-                        </div>
+                    <div class="col-12">
+                        <form class="form-group row" method="POST" action="{{ path('users') }}">
+                            <div class="col-md-10">
+                                <select class="form-control custom-select" name="tri">
+                                    <option value="null" {% if id == null %}selected{% endif %}>Ordre Alphabétique</option>
+                                    <option value="1" {% if id == 1 %}selected{% endif %}>Ordre Alphabétique Inverse</option>
+                                    <option value="2" {% if id == 2 %}selected{% endif %}>ID</option>
+                                    <option value="3" {% if id == 3 %}selected{% endif %}>Du plus récent au plus ancien</option>
+                                    <option value="4" {% if id == 4 %}selected{% endif %}>Du plus ancien au plus récent</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <input class="btn btn-secondary form-control" type="submit" value="Trier">
+                            </div>
+                        </form>
                     </div>
                     <div class="col-2 my-auto">Afficher :</div>
                     <div class="col-2 my-auto">
@@ -60,7 +65,7 @@
                                     <h5 class="card-title my-auto">{{ user.firstName }} {{ user.lastName }}</h5>
                                 </div>
                                 <div class="col-md-4 my-auto text-right">
-                                    <a href="#" class="btn btn-sm btn-warning">
+                                    <a href="{{ path('edit_user',{id : user.id}) }}" class="btn btn-sm btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a data-toggle="modal" data-target="#alert{{ user.id }}"
