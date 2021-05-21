@@ -39,9 +39,11 @@
                             </p>
                         </div>
                         <hr>
+                        {% if panne.solution is defined %}
                         <div class="card-text">
                             <p>{{ panne.solution }}</p>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -27,24 +27,29 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('add_panne') }}">Ajouter une panne</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('tickets') }}">Liste des tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('dashboard') }}">Dashboard</a>
+                    </li>
                 {% elseif role == "ROLE_CONTRIBUTOR" %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('add_panne') }}">Ajouter une panne</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('add_panne') }}">Envoyer un ticket</a>
+                        <a class="nav-link" href="{{ path('add_ticket') }}">Envoyer un ticket</a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('tickets') }}">Liste des tickets</a>
+                    </li>
                 {% endif %}
             {% endfor %}
             {% if app.user.roles[0] == "ROLE_USER" %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('add_panne') }}">Envoyer un ticket</a>
+                <a class="nav-link" href="{{ path('add_ticket') }}">Envoyer un ticket</a>
             </li>
             {% endif %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('dashboard') }}">Dashboard</a>
-            </li>
         </ul>
         <span class="navbar-text">
       <a class="btn btn-outline-primary loginbutton" data-toggle="modal" data-target="#logout"

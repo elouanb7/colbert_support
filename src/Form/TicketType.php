@@ -7,29 +7,23 @@ use App\Entity\Panne;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 
-class PanneType extends AbstractType
+class TicketType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('intitule', TextType::class, [
-                'label' => "Intitulé de la panne",
+                'label' => "Intitulé du ticket",
                 'empty_data' => '',
                 'required' => false,
             ])
             ->add('description', TextareaType::class, [
-                'label' => "Description de la panne",
-                'empty_data' => '',
-                'required' => false,
-            ])
-            ->add('solution', TextareaType::class, [
-                'label' => "Solution de la panne",
+                'label' => "Description du ticket",
                 'empty_data' => '',
                 'required' => false,
             ])
