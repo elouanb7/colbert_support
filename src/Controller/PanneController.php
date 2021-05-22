@@ -29,14 +29,16 @@ class PanneController extends AbstractController
     private CategorieRepository $categorieRepo;
     private PanneRepository $panneRepo;
     private UserRepository $userRepo;
+    private EntityManagerInterface $manager;
 
 
     // Constructeur
-    public function __construct(CategorieRepository $categorieRepo, PanneRepository $panneRepo, UserRepository $userRepo)
+    public function __construct(CategorieRepository $categorieRepo, PanneRepository $panneRepo, UserRepository $userRepo, EntityManagerInterface $manager)
     {
         $this->categorieRepo = $categorieRepo;
         $this->panneRepo = $panneRepo;
         $this->userRepo = $userRepo;
+        $this->manager = $manager;
     }
 
 
@@ -83,7 +85,7 @@ class PanneController extends AbstractController
      * @return RedirectResponse|Response
      */
 
-    public function addPanne(Request $request, EntityManagerInterface $manager)
+    public function addPanne(Request $request)
     {
         $categories = $this->categorieRepo->findAll();
         $panne = new Panne();
@@ -103,9 +105,9 @@ class PanneController extends AbstractController
             $panne->setCreatedAt($editDate);
             $panne->setUser($this->getUser());
             //Je persiste mes données
-            $manager->persist($panne);
+            $this->manager->persist($panne);
             //J'enregistre mes données
-            $manager->flush();
+            $this->manager->flush();
 
             //Message de succès
             $this->addflash(
@@ -130,7 +132,7 @@ class PanneController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function editPanne(Panne $panne, Request $request, EntityManagerInterface $manager): Response
+    public function editPanne(Panne $panne, Request $request): Response
     {
         $categories = $this->categorieRepo->findAll();
         //Je crée le formulaire
@@ -150,9 +152,9 @@ class PanneController extends AbstractController
                 $panne->setIsTicket(true);
             }
             //Je persiste mes données
-            $manager->persist($panne);
+            $this->manager->persist($panne);
             //J'enregistre mes données
-            $manager->flush();
+            $this->manager->flush();
 
             //Message de succès
             $this->addflash(
@@ -179,7 +181,7 @@ class PanneController extends AbstractController
      * @return RedirectResponse|Response
      */
 
-    public function delPanne(Panne $panne, EntityManagerInterface $manager)
+    public function delPanne(Panne $panne)
     {
         $categories = $this->categorieRepo->findAll();
         $catPannes = $panne->getCategorie()->getId();
@@ -187,9 +189,9 @@ class PanneController extends AbstractController
         if ($this->isGranted('ROLE_ADMIN')) {
 
             //
-            $manager->remove($panne);
+            $this->manager->remove($panne);
             //
-            $manager->flush();
+            $this->manager->flush();
             //
             $this->addFlash(
                 'success',
@@ -271,7 +273,7 @@ class PanneController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return RedirectResponse|Response
      */
-    public function addTicket(Request $request, EntityManagerInterface $manager)
+    public function addTicket(Request $request)
     {
         $categories = $this->categorieRepo->findAll();
         $ticket = new Panne();
@@ -289,9 +291,9 @@ class PanneController extends AbstractController
             $ticket->setUser($this->getUser());
             $ticket->setIsTicket(true);
             //Je persiste mes données
-            $manager->persist($ticket);
+            $this->manager->persist($ticket);
             //J'enregistre mes données
-            $manager->flush();
+            $this->manager->flush();
 
             //Message de succès
             $this->addflash(
@@ -316,7 +318,7 @@ class PanneController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function editTicket(Panne $ticket, Request $request, EntityManagerInterface $manager): Response
+    public function editTicket(Panne $ticket, Request $request): Response
     {
         $categories = $this->categorieRepo->findAll();
         //Je crée le formulaire
@@ -334,9 +336,9 @@ class PanneController extends AbstractController
             //Je transforme mon ticket en panne résolue
             $ticket->setIsTicket(false);
             //Je persiste mes données
-            $manager->persist($ticket);
+            $this->manager->persist($ticket);
             //J'enregistre mes données
-            $manager->flush();
+            $this->manager->flush();
 
             //Message de succès
             $this->addflash(
