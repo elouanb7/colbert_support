@@ -60,14 +60,26 @@ class UserController extends AbstractController
     public function users(Request $request): Response
     {
         $id = $request->request->getInt('tri');
-        $users = $this->userService->sortUsers($id);
+        /*$users = $this->userService->sortUsers($id);*/
+        $users = $this->userService->whichRoles($request, $id);
+        $users = $this->userService->sortUsers($id,$users);
+        if ($users == []){
+            $users = $this->userRepo->findBy([],['lastName' => 'ASC']);
+        }
+
+
+
         $categories = $this->categorieRepo->findAll();
 
         return $this->render('user/users.html.twig', [
             'controller_name' => 'UserController',
             'categories' => $categories,
             'users' => $users,
-            'id' => $id
+            'id' => $id,
+            'usersCheck' => $request->request->get('usersCheck'),
+            'contributorsCheck' => $request->request->get('contributorsCheck'),
+            'adminsCheck' => $request->request->get('adminsCheck'),
+            'superAdminsCheck' => $request->request->get('superAdminsCheck'),
         ]);
     }
 

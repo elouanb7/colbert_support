@@ -13,14 +13,19 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Extra\String\StringExtension;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use function Composer\Autoload\includeFile;
 
 class PanneController extends AbstractController
@@ -30,15 +35,17 @@ class PanneController extends AbstractController
     private PanneRepository $panneRepo;
     private UserRepository $userRepo;
     private EntityManagerInterface $manager;
+    private MailerInterface $mailer;
 
 
     // Constructeur
-    public function __construct(CategorieRepository $categorieRepo, PanneRepository $panneRepo, UserRepository $userRepo, EntityManagerInterface $manager)
+    public function __construct(CategorieRepository $categorieRepo, PanneRepository $panneRepo, UserRepository $userRepo, EntityManagerInterface $manager, MailerInterface $mailer)
     {
         $this->categorieRepo = $categorieRepo;
         $this->panneRepo = $panneRepo;
         $this->userRepo = $userRepo;
         $this->manager = $manager;
+        $this->mailer = $mailer;
     }
 
 
@@ -270,8 +277,8 @@ class PanneController extends AbstractController
     /**
      * @Route("/tickets/ajout", name="add_ticket")
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @return RedirectResponse|Response
+     * @throws TransportExceptionInterface
      */
     public function addTicket(Request $request)
     {
@@ -294,6 +301,19 @@ class PanneController extends AbstractController
             $this->manager->persist($ticket);
             //J'enregistre mes données
             $this->manager->flush();
+
+            $user = $this->userRepo->findOneBy(['id' => $this->getUser()]);
+            $email = (new TemplatedEmail())
+                ->from('elouan.bessettes@gmail.com')
+                ->to('elouanb7@gmail.com')
+                ->subject('Nouveau ticket - ' . $form->getData()->getIntitule() . " de " . $user->getFirstName() . " " . $user->getLastName())
+                ->htmlTemplate('emails/new_ticket.html.twig')
+                ->context([
+                    'date' => new \DateTime('now'),
+                    'user' => $user,
+                    'ticket' => $ticket,
+                ]);
+            $this->mailer->send($email);
 
             //Message de succès
             $this->addflash(
@@ -354,6 +374,44 @@ class PanneController extends AbstractController
             'form' => $form->createView(),
             'ticket' => $ticket,
             'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * @Route("/tickets/detail/{id}/delete", name="del_ticket")
+     *
+     * @param Panne $panne
+     * @param EntityManagerInterface $manager
+     * @return RedirectResponse|Response
+     */
+
+    public function delTicket(Panne $panne)
+    {
+        $categories = $this->categorieRepo->findAll();
+        $catPannes = $panne->getCategorie()->getId();
+        $id = $catPannes;
+        if ($this->isGranted('ROLE_ADMIN')) {
+            //
+            $this->manager->remove($panne);
+            //
+            $this->manager->flush();
+            //
+            $this->addFlash(
+                'success',
+                "La panne à bien été supprimée !"
+            );
+            //J'affiche la vue
+            return $this->redirectToRoute('tickets', [
+                'id' => $id
+            ]);
+        }
+        $this->addFlash(
+            'danger',
+            "Vous n'avez pas les permissions nécéssaires !"
+        );
+        return $this->redirectToRoute('tickets', [
+            'panne' => $panne,
+            'id' => $id,
         ]);
     }
 
