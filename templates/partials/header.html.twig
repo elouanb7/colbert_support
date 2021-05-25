@@ -18,7 +18,8 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for categorie in categories %}
-                        <a class="dropdown-item" href="{{ path('pannes',{'id':categorie.id}) }}">{{ categorie.name }}</a>
+                        <a class="dropdown-item"
+                           href="{{ path('pannes',{'id':categorie.id}) }}">{{ categorie.name }}</a>
                     {% endfor %}
                 </div>
             </li>
@@ -46,14 +47,21 @@
                 {% endif %}
             {% endfor %}
             {% if app.user.roles[0] == "ROLE_USER" %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('add_ticket') }}">Envoyer un ticket</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('add_ticket') }}">Envoyer un ticket</a>
+                </li>
             {% endif %}
         </ul>
         <span class="navbar-text">
-      <a class="btn btn-outline-primary loginbutton" data-toggle="modal" data-target="#logout"
-         role="button">Déconnexion</a>
+            <ul  class="navbar-nav mr-auto">
+                <li class="nav-item mr-2">
+                    <a class="nav-link" href="{{ path('profil', {'id': app.user.id}) }}">Profil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary loginbutton" data-toggle="modal" data-target="#logout"
+                       role="button">Déconnexion</a>
+                </li>
+            </ul>
     </span>
     </div>
 </nav>
