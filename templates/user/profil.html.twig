@@ -15,7 +15,102 @@
                 </span>
             </h5>
         </div>
+        {% if pannes != [] %}
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Pannes</h5>
+                            <hr>
+                            <div class="card-text">
+                                <div class="list-group {{ pannes|length>2 ? "dashboard" : "" }}">
+                                    {% for panne in pannes %}
 
+                                        <div class="list-group-item list-group-item-action">
+                                            <div class="row">
+                                                <div class="col-md-9 ">
+
+                                                    <a href="{{ path('detail',{'id':panne.id}) }}"><h5
+                                                                class="mb-1">{{ panne.intitule }}</h5>
+                                                    </a>
+                                                    <p class="mb-1">{{ panne.description  | u.truncate(50, '...', false) }}</p>
+                                                    <small>Posté par <a
+                                                                href="{{ path('profil',{'id':panne.user.id}) }}">{{ panne.user.firstName }} {{ panne.user.lastName }}</a>
+                                                    </small>
+
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="col-md-12 text-right">
+                                                        {% set myOlderDate = panne.createdAt | date %}
+                                                        <small class="">{{ myOlderDate|ago }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    {% if allPannes > 6 %}
+                                        <div class="list-group-item list-group-item-action">
+                                            <div class="row">
+                                                <h5><a class="ml-3" href="{{ path('pannes',{'id': 0}) }}">Voir plus >></a></h5>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if tickets != [] %}
+        <div class="row">
+            <div class="col-md-9">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Tickets</h5>
+                        <hr>
+                        <div class="card-text">
+                            <div class="list-group {{ tickets|length>2 ? "dashboard" : "" }}">
+                                {% for ticket in tickets %}
+
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <div class="col-md-9 ">
+
+                                                <a href="{{ path('detail',{'id':ticket.id}) }}"><h5
+                                                            class="mb-1">{{ ticket.intitule }}</h5>
+                                                </a>
+                                                <p class="mb-1">{{ ticket.description  | u.truncate(50, '...', false) }}</p>
+                                                <small>Posté par <a
+                                                            href="{{ path('profil',{'id':ticket.user.id}) }}">{{ ticket.user.firstName }} {{ ticket.user.lastName }}</a>
+                                                </small>
+
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="col-md-12 text-right">
+                                                    {% set myOlderDate = ticket.createdAt | date %}
+                                                    <small class="">{{ myOlderDate|ago }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                {% if allTickets > 6 %}
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="row">
+                                            <h5><a class="ml-3" href="{{ path('tickets') }}">Voir plus >></a></h5>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <br>
         <p>{{ user.email }}</p>
     </div>

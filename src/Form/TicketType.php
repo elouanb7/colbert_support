@@ -5,12 +5,14 @@ namespace App\Form;
 use App\Entity\Categorie;
 use App\Entity\Panne;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Validator\Constraints\File;
 
 class TicketType extends AbstractType
 {
@@ -27,6 +29,19 @@ class TicketType extends AbstractType
                 'empty_data' => '',
                 'required' => false,
             ])
+            ->add('image', FileType::class, [
+                'label' => "Capture d'écran (.png/.jpg)",
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '4096k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => "Merci d'ajouter une image valide",
+                    ])
+            ],])
             ->add('categorie', EntityType::class, [
                 'label' => "Catégorie",
                 'class' => Categorie::class,

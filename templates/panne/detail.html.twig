@@ -8,7 +8,8 @@
     <div class="container mt-3">
         <h1>{{ panne.intitule }}</h1>
         <div class="row">
-            <div class="col-6"><small>Solutionnée par <a
+            <div class="col-6"><small>
+                    {{ panne.isTicket == true ? "Envoyée par" : "Solutionnée par" }} <a
                             href="{{ path('profil',{'id':panne.user.id}) }}">{{ panne.user.firstName }} {{ panne.user.lastName }}</a>,
                     le {{ panne.createdAt | date ('d/m/Y') }}</small></div>
             <div class="col-6 text-right">
@@ -24,14 +25,16 @@
                     {% endif %}
 
                 {% endfor %}
-                </div>
+            </div>
         </div>
         <br>
         <div class="row">
             <div class="col-2"></div>
             <div class="col-8">
-                <div class="card">
-                    <img src="https://www.placehold.it/300x100" alt="">
+
+                <div class="card mb-5">
+                    <img src="{{ asset ('img/img_pannes/' ~ panne.image) }}" class="card-img-top" alt="...">
+
                     <div class="card-body">
                         <div class="card-text">
                             <p>
@@ -40,9 +43,9 @@
                         </div>
                         <hr>
                         {% if panne.solution is defined %}
-                        <div class="card-text">
-                            <p>{{ panne.solution }}</p>
-                        </div>
+                            <div class="card-text">
+                                <p>{{ panne.solution }}</p>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
@@ -52,6 +55,7 @@
 
 
     </div>
+
 {% endblock %}
 
 

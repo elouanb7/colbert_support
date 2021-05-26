@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Categorie;
 use App\Entity\Panne;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -12,6 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Validator\Constraints\File;
 
 class PanneType extends AbstractType
 {
@@ -33,6 +35,20 @@ class PanneType extends AbstractType
                 'empty_data' => '',
                 'required' => false,
             ])
+           ->add('image', FileType::class, [
+                'label' => "Capture d'écran (.png/.jpg)",
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '4096k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => "Merci d'ajouter une image valide",
+                    ])
+                ],])
             ->add('categorie', EntityType::class, [
                 'label' => "Catégorie",
                 'class' => Categorie::class,
@@ -45,7 +61,7 @@ class PanneType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Panne::class,
+            'data_class' => Panne::class
         ]);
     }
 }

@@ -10,6 +10,7 @@ use App\Form\TicketType;
 use App\Repository\CategorieRepository;
 use App\Repository\PanneRepository;
 use App\Repository\UserRepository;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
@@ -17,15 +18,19 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Twig\Extra\String\StringExtension;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use function Composer\Autoload\includeFile;
 
 class PanneController extends AbstractController
@@ -36,16 +41,20 @@ class PanneController extends AbstractController
     private UserRepository $userRepo;
     private EntityManagerInterface $manager;
     private MailerInterface $mailer;
+    private FileUploader $fileUploader;
+    private $targetDirectory;
 
 
     // Constructeur
-    public function __construct(CategorieRepository $categorieRepo, PanneRepository $panneRepo, UserRepository $userRepo, EntityManagerInterface $manager, MailerInterface $mailer)
+    public function __construct(CategorieRepository $categorieRepo, PanneRepository $panneRepo, UserRepository $userRepo, EntityManagerInterface $manager, MailerInterface $mailer, FileUploader $fileUploader, $targetDirectory)
     {
         $this->categorieRepo = $categorieRepo;
         $this->panneRepo = $panneRepo;
         $this->userRepo = $userRepo;
         $this->manager = $manager;
         $this->mailer = $mailer;
+        $this->fileUploader = $fileUploader;
+        $this->targetDirectory = $targetDirectory;
     }
 
 
@@ -249,9 +258,9 @@ class PanneController extends AbstractController
         $categories = $this->categorieRepo->findAll();
         $id = $request->request->getInt('categories');
         if ($id) {
-            $tickets = $this->panneRepo->findBy(['isTicket' => true, 'categorie' => $id],['createdAt' => 'ASC']);
+            $tickets = $this->panneRepo->findBy(['isTicket' => true, 'categorie' => $id], ['createdAt' => 'ASC']);
         } else {
-            $tickets = $this->panneRepo->findBy(['isTicket' => true],['createdAt' => 'ASC']);
+            $tickets = $this->panneRepo->findBy(['isTicket' => true], ['createdAt' => 'ASC']);
         }
         $pagination = $paginator->paginate(
             $tickets,
@@ -294,9 +303,16 @@ class PanneController extends AbstractController
             //Je récupère mes données du formulaire
             $ticket = $form->getData();
             //Je met à jour la date
-            $ticket->setCreatedAt(new \DateTime('now'));
-            $ticket->setUser($this->getUser());
-            $ticket->setIsTicket(true);
+            $ticket->setCreatedAt(new \DateTime('now'))
+                ->setUser($this->getUser())
+                ->setIsTicket(true);
+
+            $image = $form->get('image')->getData();
+            if ($image) {
+                $imageFileName = $this->fileUploader->upload($image);
+                $ticket->setImage($imageFileName);
+            }
+
             //Je persiste mes données
             $this->manager->persist($ticket);
             //J'enregistre mes données
@@ -305,7 +321,7 @@ class PanneController extends AbstractController
             $user = $this->userRepo->findOneBy(['id' => $this->getUser()]);
             $email = (new TemplatedEmail())
                 ->from('elouan.bessettes@gmail.com')
-                ->to('elouanb7@gmail.com')
+                ->to('samuel@smauger.fr')
                 ->subject('Nouveau ticket - ' . $form->getData()->getIntitule() . " de " . $user->getFirstName() . " " . $user->getLastName())
                 ->htmlTemplate('emails/new_ticket.html.twig')
                 ->context([
@@ -338,7 +354,7 @@ class PanneController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function editTicket(Panne $ticket, Request $request): Response
+    public function editTicket(Panne $ticket, Request $request, Filesystem $filesystem): Response
     {
         $categories = $this->categorieRepo->findAll();
         //Je crée le formulaire
@@ -353,8 +369,21 @@ class PanneController extends AbstractController
             $ticket = $form->getData();
             //Je met à jour la date
             $ticket->setCreatedAt(new \DateTime('now'));
-            //Je transforme mon ticket en panne résolue
-            $ticket->setIsTicket(false);
+            //Je transforme mon ticket en panne résolue ou non
+            if ($ticket->getSolution()) {
+                $ticket->setIsTicket(false);
+            }
+
+            if (!$ticket->getImage()) {
+                $filesystem->remove(['img/img_pannes/' . $ticket->getImage()]);
+                $ticket->setImage(null);
+            }
+            $image = $form->get('image')->getData();
+            if ($image) {
+                $imageFileName = $this->fileUploader->upload($image);
+                $ticket->setImage($imageFileName);
+            }
+
             //Je persiste mes données
             $this->manager->persist($ticket);
             //J'enregistre mes données

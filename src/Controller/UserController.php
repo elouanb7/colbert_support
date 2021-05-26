@@ -43,12 +43,18 @@ class UserController extends AbstractController
      */
     public function profile($id): Response
     {
+        $allTickets = $this->panneRepo->findBy(['isTicket' => true, 'user' => $this->getUser()], [],);
+        $allPannes = $this->panneRepo->findBy(['isTicket' => false, 'user' => $this->getUser()], [],);
         $categories = $this->categorieRepo->findAll();
         $user = $this->userRepo->findOneBy(['id' => $id]);
         return $this->render('user/profil.html.twig', [
             'controller_name' => 'UserController',
             'categories' => $categories,
             'user' => $user,
+            'tickets' => $this->panneRepo->findBy(['isTicket' => true, 'user' => $this->getUser()], [], 6),
+            'pannes' => $this->panneRepo->findBy(['isTicket' => false, 'user' => $this->getUser()], [], 6),
+            'allTickets' => count($allTickets),
+            'allPannes' => count($allPannes),
         ]);
     }
 
